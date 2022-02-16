@@ -24,13 +24,12 @@ const listTemplate = (name) => {
 
 addMenuBtn.addEventListener("click", (e) => {
   const name = addMenuForm.espressoMenuName.value;
-  if (name != "") {
-    menuList.insertAdjacentHTML("beforeend", listTemplate(name));
-    // Input 비우기
-    addMenuForm.reset();
+  if (name === "") return;
+  menuList.insertAdjacentHTML("beforeend", listTemplate(name));
+  // Input 비우기
+  addMenuForm.reset();
 
-    updateMenuCount();
-  }
+  updateMenuCount();
 });
 
 addMenuForm.addEventListener("submit", (e) => {
@@ -39,35 +38,27 @@ addMenuForm.addEventListener("submit", (e) => {
 
 addMenuInput.addEventListener("keypress", (e) => {
   const name = addMenuForm.espressoMenuName.value;
-  if (window.event.keyCode == 13 && name != "") {
-    menuList.insertAdjacentHTML("beforeend", listTemplate(name));
-    // Input 비우기
-    addMenuForm.reset();
-    updateMenuCount();
-  }
+  if (window.event.keyCode !== 13 || name === "") return;
+  menuList.insertAdjacentHTML("beforeend", listTemplate(name));
+  // Input 비우기
+  addMenuForm.reset();
+  updateMenuCount();
 });
 
 document.querySelector("#espresso-menu-list").addEventListener("click", (e) => {
-  if (e.target.classList.contains("menu-edit-button")) {
-    const prevMenuName = e.target
-      .closest("li")
-      .querySelector(".menu-name").innerText;
-    const updatedMenuName = prompt("수정할 값을 입력해주세요.", prevMenuName);
-    e.target.closest("li").querySelector(".menu-name").innerText =
-      updatedMenuName;
-  }
+  if (!e.target.classList.contains("menu-edit-button")) return;
+  const menuName = e.target.closest("li").querySelector(".menu-name");
+  const prevMenuName = menuName.innerText;
+  const updatedMenuName = prompt("수정할 값을 입력해주세요.", prevMenuName);
+  menuName.innerText = updatedMenuName;
 });
 
 document.querySelector("#espresso-menu-list").addEventListener("click", (e) => {
-  if (e.target.classList.contains("menu-remove-button")) {
-    const menuName = e.target
-      .closest("li")
-      .querySelector(".menu-name").innerText;
-    if (confirm(`${menuName}을(를) 삭제하시겠습니까?`)) {
-      e.target.closest("li").remove();
-      updateMenuCount();
-    }
-  }
+  if (!e.target.classList.contains("menu-remove-button")) return;
+  const menuName = e.target.closest("li").querySelector(".menu-name");
+  if (!confirm(`${menuName.innerText}을(를) 삭제하시겠습니까?`)) return;
+  e.target.closest("li").remove();
+  updateMenuCount();
 });
 
 function updateMenuCount() {
